@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="dimakovboi — Официальный сайт стримера. Minecraft, Brawl Stars, Euro Truck Simulator 2, CS2.">
+    <meta name="theme-color" content="#08090c">
+    <title>dimakovboi</title>
+
+    <meta property="og:title" content="dimakovboi">
+    <meta property="og:description" content="Официальный сайт стримера dimakovboi.">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="ru_RU">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<div class="page-content">
+
+    <!-- HEADER -->
+    <header class="header" id="header">
+        <div class="container">
+            <a href="#" class="logo">dimakovboi</a>
+
+            <button class="mobile-toggle" id="mobileToggle" aria-label="Открыть меню">
+                <span></span><span></span><span></span>
+            </button>
+
+            <nav class="nav" id="mainNav">
+                <a href="#stream">Стрим</a>
+                <a href="#games">Игры</a>
+                <a href="#schedule">Расписание</a>
+                <a href="#setup">Сетап</a>
+                <a href="#community">Сообщество</a>
+                <a href="#donate">Донат</a>
+            </nav>
+
+            <a href="https://www.twitch.tv/dimakovboi" target="_blank" class="live-badge">
+                <span class="live-dot"></span>
+                LIVE ON TWITCH
+            </a>
+        </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero" id="hero">
+        <div class="hero-content reveal">
+            <p class="hero-subtitle">Streamer · Content Creator · Gamer</p>
+            <h1 class="hero-title">dimakovboi</h1>
+            <p class="hero-desc">Стримы, контент и только живые эмоции. Добро пожаловать в наше комьюнити!</p>
+
+            <div class="game-badges">
+                <span class="game-badge">Minecraft</span>
+                <span class="game-badge">Brawl Stars</span>
+                <span class="game-badge">Euro Truck Sim 2</span>
+                <span class="game-badge">CS2</span>
+            </div>
+
+            <div class="hero-buttons">
+                <a href="https://www.twitch.tv/dimakovboi" target="_blank" class="btn btn-primary">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    Смотреть Стрим
+                </a>
+                <a href="https://t.me/dimakovboi_tv" target="_blank" class="btn btn-secondary">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                    Telegram Канал
+                </a>
+            </div>
+        </div>
+
+        <div class="scroll-indicator">
+            <span>Scroll</span>
+            <div class="scroll-arrow"></div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- COUNTDOWN -->
+    <section class="section countdown-section">
+        <div class="container">
+            <div id="countdown" class="countdown reveal"></div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- STREAM ( first ) -->
+    <section class="section stream-section" id="stream">
+        <div class="container">
+            <h2 class="section-title reveal">Прямой Эфир</h2>
+            <div class="stream-wrapper reveal">
+                <div class="stream-player">
+                    <iframe src="" allowfullscreen></iframe>
+                </div>
+                <div class="stream-info-panel glass-card">
+                    <h3>Сейчас в эфире</h3>
+                    <p>Заходи на стрим к dimakovboi! Общайся в чате, заказывай игры и будь частью движухи.</p>
+                    <div class="stream-stats">
+                        <div class="stream-stat">
+                            <div class="stream-stat-value" id="viewerCount">LIVE</div>
+                            <div class="stream-stat-label">Статус</div>
+                        </div>
+                        <div class="stream-stat">
+                            <div class="stream-stat-value" id="followerCount">...</div>
+                            <div class="stream-stat-label">Фолловеры</div>
+                        </div>
+                    </div>
+                    <a href="https://www.twitch.tv/dimakovboi" target="_blank" class="btn btn-primary btn-stream-full">
+                        Перейти на Twitch
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- GAMES ( second ) -->
+    <section class="section" id="games">
+        <div class="container">
+            <h2 class="section-title reveal">Дисциплины</h2>
+            <div class="games-grid reveal" id="gamesGrid"></div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- SCHEDULE -->
+    <section class="section" id="schedule">
+        <div class="container">
+            <h2 class="section-title reveal">Расписание на Месяц</h2>
+            <div class="glass-card calendar-wrapper reveal">
+                <div class="calendar-controls">
+                    <button class="month-nav-btn" id="prevMonthBtn">&larr; Пред</button>
+                    <div class="month-display" id="monthDisplay"></div>
+                    <button class="month-nav-btn" id="nextMonthBtn">След &rarr;</button>
+                </div>
+                <div class="calendar-weekdays">
+                    <div class="weekday-name">Пн</div>
+                    <div class="weekday-name">Вт</div>
+                    <div class="weekday-name">Ср</div>
+                    <div class="weekday-name">Чт</div>
+                    <div class="weekday-name">Пт</div>
+                    <div class="weekday-name">Сб</div>
+                    <div class="weekday-name">Вс</div>
+                </div>
+                <div class="month-grid" id="monthGrid"></div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- SETUP ( HTML directly ) -->
+    <section class="section" id="setup">
+        <div class="container">
+            <h2 class="section-title reveal">Мой Сетап</h2>
+            <div class="setup-grid reveal">
+
+                <div class="setup-item glass-card">
+                    <div class="setup-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="6" y1="8" x2="6" y2="8.01"/><line x1="10" y1="8" x2="10" y2="8.01"/><line x1="14" y1="8" x2="14" y2="8.01"/><line x1="18" y1="8" x2="18" y2="8.01"/><line x1="6" y1="12" x2="6" y2="12.01"/><line x1="18" y1="12" x2="18" y2="12.01"/><line x1="6" y1="16" x2="18" y2="16"/></svg></div>
+                    <div class="setup-info">
+                        <h4>Материнская плата</h4>
+                        <p>ASRock B650M Pro RS WiFi</p>
+                        <div class="setup-detail">AMD B650 · mATX · WiFi 6E</div>
+                    </div>
+                </div>
+
+                <div class="setup-item glass-card">
+                    <div class="setup-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg></div>
+                    <div class="setup-info">
+                        <h4>Процессор</h4>
+                        <p>AMD Ryzen 7 7700</p>
+                        <div class="setup-detail">8 ядер / 16 потоков · 5.3 GHz</div>
+                    </div>
+                </div>
+
+                <div class="setup-item glass-card">
+                    <div class="setup-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="8" cy="12" r="2.5"/><circle cx="16" cy="12" r="2.5"/><line x1="6" y1="18" x2="6" y2="21"/><line x1="10" y1="18" x2="10" y2="21"/><line x1="14" y1="18" x2="14" y2="21"/><line x1="18" y1="18" x2="18" y2="21"/></svg></div>
+                    <div class="setup-info">
+                        <h4>Видеокарта</h4>
+                        <p>Palit RTX 5060 Ti Dual OC</p>
+                        <div class="setup-detail">8 GB GDDR7</div>
+                    </div>
+                </div>
+
+                <div class="setup-item glass-card">
+                    <div class="setup-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="1"/><line x1="7" y1="9" x2="7" y2="15"/><line x1="10" y1="9" x2="10" y2="15"/><line x1="14" y1="9" x2="14" y2="15"/><line x1="17" y1="9" x2="17" y2="15"/><line x1="9" y1="19" x2="9" y2="22"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="15" y1="19" x2="15" y2="22"/></svg></div>
+                    <div class="setup-info">
+                        <h4>Оперативная память</h4>
+                        <p>32 GB DDR5 6000 MHz</p>
+                        <div class="setup-detail">Apacer NOX · 2×16 GB</div>
+                    </div>
+                </div>
+
+                <div class="setup-item glass-card">
+                    <div class="setup-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="6" y1="8" x2="6" y2="8.01"/><line x1="10" y1="8" x2="10" y2="8.01"/><line x1="14" y1="8" x2="14" y2="8.01"/><line x1="18" y1="8" x2="18" y2="8.01"/><line x1="6" y1="12" x2="6" y2="12.01"/><line x1="18" y1="12" x2="18" y2="12.01"/><line x1="6" y1="16" x2="18" y2="16"/></svg></div>
+                    <div class="setup-info">
+                        <h4>Накопитель</h4>
+                        <p>WD Blue SN5100 1TB</p>
+                        <div class="setup-detail">NVMe SSD</div>
+                    </div>
+                </div>
+
+                <div class="setup-item glass-card">
+                    <div class="setup-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+                    <div class="setup-info">
+                        <h4>Монитор</h4>
+                        <p>27" 2K IPS 200Hz</p>
+                        <div class="setup-detail">ELSA EA272FX Pro · 350 нит</div>
+                    </div>
+                </div>
+
+                <div class="setup-item glass-card">
+                    <div class="setup-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/><circle cx="12" cy="12" r="8" stroke-dasharray="4 2"/></svg></div>
+                    <div class="setup-info">
+                        <h4>Кулер</h4>
+                        <p>ID-Cooling Frozn A620 Pro SE</p>
+                        <div class="setup-detail">ARGB · Башенный</div>
+                    </div>
+                </div>
+
+                <div class="setup-item glass-card">
+                    <div class="setup-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><line x1="12" y1="10" x2="12" y2="14"/><line x1="10" y1="12" x2="14" y2="12"/><line x1="6" y1="18" x2="6" y2="21"/><line x1="18" y1="18" x2="18" y2="21"/></svg></div>
+                    <div class="setup-info">
+                        <h4>Блок питания</h4>
+                        <p>1stPlayer ACK Bronze 650W</p>
+                        <div class="setup-detail">80+ Bronze</div>
+                    </div>
+                </div>
+
+                <div class="setup-item glass-card">
+                    <div class="setup-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><line x1="6" y1="10" x2="6" y2="10.01"/><line x1="10" y1="10" x2="10" y2="10.01"/><line x1="14" y1="10" x2="14" y2="10.01"/><line x1="18" y1="10" x2="18" y2="10.01"/><line x1="8" y1="14" x2="16" y2="14"/></svg></div>
+                    <div class="setup-info">
+                        <h4>Клавиатура</h4>
+                        <p>AULA F75</p>
+                        <div class="setup-detail">Механическая · Чёрно-оранжевая</div>
+                    </div>
+                </div>
+
+                <div class="setup-item glass-card">
+                    <div class="setup-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="6"/><line x1="12" y1="6" x2="12" y2="10"/></svg></div>
+                    <div class="setup-info">
+                        <h4>Мышь</h4>
+                        <p>Redragon M601WL-BA</p>
+                        <div class="setup-detail">Wireless · Gaming</div>
+                    </div>
+                </div>
+
+                <div class="setup-item glass-card">
+                    <div class="setup-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div>
+                    <div class="setup-info">
+                        <h4>Микрофон</h4>
+                        <p>ME6P</p>
+                        <div class="setup-detail">Динамический</div>
+                    </div>
+                </div>
+
+                <div class="setup-item glass-card">
+                    <div class="setup-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg></div>
+                    <div class="setup-info">
+                        <h4>Наушники</h4>
+                        <p>Defender FreeMotion B540</p>
+                        <div class="setup-detail">Беспроводные</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- COMMUNITY -->
+    <section class="section" id="community">
+        <div class="container">
+            <h2 class="section-title reveal">Сообщество</h2>
+            <div class="community-wrapper reveal">
+
+                <div class="telegram-widget glass-card">
+                    <h3>Telegram <span class="glow-text">Канал</span></h3>
+                    <p>Анонсы стримов, новейшие ролики и прямое общение с dimakovboi в Telegram!</p>
+                    <div class="social-links">
+                        <a href="https://t.me/dimakovboi_tv" target="_blank" class="social-link">
+                            <svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                            <div>
+                                <div class="social-link-text">Telegram</div>
+                                <div class="social-link-desc">@dimakovboi_tv</div>
+                            </div>
+                        </a>
+                        <a href="https://www.twitch.tv/dimakovboi" target="_blank" class="social-link">
+                            <svg viewBox="0 0 24 24"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/></svg>
+                            <div>
+                                <div class="social-link-text">Twitch</div>
+                                <div class="social-link-desc">dimakovboi</div>
+                            </div>
+                        </a>
+                        <a href="https://www.youtube.com/@dimakovboi" target="_blank" class="social-link">
+                            <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12z"/></svg>
+                            <div>
+                                <div class="social-link-text">YouTube</div>
+                                <div class="social-link-desc">@dimakovboi</div>
+                            </div>
+                        </a>
+                        <a href="https://t.me/dimakovboi_tv_group" target="_blank" class="social-link">
+                            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
+                            <div>
+                                <div class="social-link-text">Telegram Чат</div>
+                                <div class="social-link-desc">Общение с комьюнити</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="community-features">
+                    <div class="community-feature-card glass-card">
+                        <div class="feature-num">01</div>
+                        <div>
+                            <h4>Стримы по расписанию</h4>
+                            <p>Регулярные трансляции по календарю — следи за расписанием стримов dimakovboi!</p>
+                        </div>
+                    </div>
+                    <div class="community-feature-card glass-card">
+                        <div class="feature-num">02</div>
+                        <div>
+                            <h4>Активный чат</h4>
+                            <p>Дружное комьюнити и живое общение на каждом эфире.</p>
+                        </div>
+                    </div>
+                    <div class="community-feature-card glass-card">
+                        <div class="feature-num">03</div>
+                        <div>
+                            <h4>Розыгрыши и ивенты</h4>
+                            <p>Участвуй в совместных играх, ивентах и розыгрышах среди зрителей.</p>
+                        </div>
+                    </div>
+                    <div class="community-feature-card glass-card">
+                        <div class="feature-num">04</div>
+                        <div>
+                            <h4>Эксклюзивные видео</h4>
+                            <p>Вырезанные моменты, топовые нарезки и уникальный контент.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- DONATE -->
+    <section class="donate-section" id="donate">
+        <div class="container">
+            <div class="donate-card glass-card reveal">
+                <svg class="donate-card-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+                <h3>Поддержать dimakovboi</h3>
+                <p>Каждый донат помогает развивать канал и делать стримы ещё качественнее. Спасибо за поддержку!</p>
+                <div class="donate-buttons">
+                    <a href="https://www.donationalerts.com/r/dimakovboi" target="_blank" class="btn btn-donate">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                        DonationAlerts
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-logo">dimakovboi</div>
+            <div class="footer-text">&copy; 2026 dimakovboi. Все права защищены.</div>
+            <div class="footer-links">
+                <a href="https://www.twitch.tv/dimakovboi" target="_blank">Twitch</a>
+                <a href="https://www.youtube.com/@dimakovboi" target="_blank">YouTube</a>
+                <a href="https://t.me/dimakovboi_tv" target="_blank">Telegram</a>
+                <a href="admin.html">Админка</a>
+            </div>
+        </div>
+    </footer>
+
+</div>
+
+<script src="app.js"></script>
+
+</body>
+</html>
