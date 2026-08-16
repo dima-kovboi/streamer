@@ -1130,6 +1130,101 @@ button {
 }
 
 /* ═══════════════════════════════════════════
+   LARGE SCREEN / 2K (2560x1440) ADAPTATION
+═══════════════════════════════════════════ */
+@media (min-width: 1920px) {
+    .container {
+        max-width: 1600px;
+    }
+
+    .section {
+        padding: 128px 0;
+    }
+
+    .section-title {
+        font-size: clamp(1.5rem, 4vw, 2.8rem);
+        margin-bottom: 56px;
+    }
+
+    .hero-title {
+        font-size: clamp(2.5rem, 8vw, 6.5rem);
+    }
+
+    .hero-desc {
+        font-size: 1.35rem;
+        max-width: 640px;
+    }
+
+    .stream-wrapper {
+        grid-template-columns: 1fr 400px;
+    }
+
+    .stream-info-panel h3 {
+        font-size: 1.3rem;
+    }
+
+    .stream-info-panel p {
+        font-size: 1.05rem;
+    }
+
+    .stream-stat-value {
+        font-size: 1.6rem;
+    }
+
+    .game-card-name {
+        font-size: 1.3rem;
+    }
+
+    .game-card-desc {
+        font-size: 0.95rem;
+    }
+
+    .game-card-genre {
+        font-size: 0.65rem;
+    }
+
+    .countdown-num {
+        font-size: clamp(1.5rem, 4vw, 3rem);
+    }
+
+    .countdown-box {
+        padding: 20px 28px;
+    }
+
+    .month-display {
+        font-size: 1.5rem;
+    }
+
+    .telegram-widget h3 {
+        font-size: 1.5rem;
+    }
+
+    .telegram-widget p {
+        font-size: 1.1rem;
+    }
+
+    .social-link-text {
+        font-size: 1rem;
+    }
+
+    .community-feature-card h4 {
+        font-size: 1rem;
+    }
+
+    .community-feature-card p {
+        font-size: 0.95rem;
+    }
+
+    .donate-card h3 {
+        font-size: 1.6rem;
+    }
+
+    .donate-card p {
+        font-size: 1.1rem;
+    }
+}
+
+/* ═══════════════════════════════════════════
    RESPONSIVE DESIGN
 ═══════════════════════════════════════════ */
 @media (max-width: 1024px) {
