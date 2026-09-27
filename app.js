@@ -17,7 +17,9 @@ let SCHEDULE_EVENTS = [
                 SCHEDULE_EVENTS = data.events;
             }
         }
-    } catch (e) {}
+    } catch (e) {
+        console.warn('[schedule] не удалось загрузить schedule.json:', e && e.message);
+    }
 })();
 
 /* ═══════════════════════════════════════════
@@ -31,26 +33,133 @@ let SCHEDULE_EVENTS = [
    CONFIG
 ═══════════════════════════════════════════ */
 const CONFIG = {
-    twitchChannel: 'dimakovboi'
+    twitchChannel: 'dimakovboi',
+    decapi: 'https://decapi.me/twitch'
 };
 
 
 /* ═══════════════════════════════════════════
-   TWITCH FOLLOWERS
+   LIVE STATUS — реальные данные Twitch через DecAPI
+   Признак эфира — viewercount: число = в эфире,
+   «is offline» = канал оффлайн. Поле /status/ отдаёт
+   название стрима, а не признак эфира — не используем его.
 ═══════════════════════════════════════════ */
-(async function fetchTwitchFollowers() {
-    const el = document.getElementById('followerCount');
-    try {
-        const res = await fetch(`https://decapi.me/twitch/followcount/${CONFIG.twitchChannel}`);
-        if (res.ok) {
-            const v = await res.text();
-            if (!isNaN(parseInt(v))) {
-                el.textContent = parseInt(v).toLocaleString('ru-RU');
-                return;
-            }
+(function liveStatus() {
+    const bar = document.getElementById('statusbar');
+    const elLabel = document.getElementById('statusLabel');
+    const elGame = document.getElementById('statusGame');
+    const elViewers = document.getElementById('statusViewers');
+    const elUptime = document.getElementById('statusUptime');
+    const elFollowers = document.getElementById('statusFollowers');
+    const factFollowers = document.getElementById('factFollowers');
+    const factState = document.getElementById('factState');
+    const statValue = document.getElementById('viewerCount');
+    const statFollowers = document.getElementById('followerCount');
+    const badge = document.querySelector('.live-badge');
+    if (!bar) return;
+
+    let followers = null;
+    let isLive = false;
+    let live = { game: null, viewers: null, uptime: null, title: null };
+
+    function fmtFollowers(n) {
+        if (n >= 1000) return (n / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+        return String(n);
+    }
+
+    function fmtDuration(s) {
+        if (!s) return null;
+        const m = s.match(/(?:(\d+)\s*d)?\s*(?:(\d+)\s*h)?\s*(?:(\d+)\s*m)?\s*(?:(\d+)\s*s)?/i);
+        if (!m) return null;
+        const [, d, h, mi, se] = m;
+        const parts = [];
+        if (d) parts.push(d + 'д');
+        if (h) parts.push(h + 'ч');
+        if (mi) parts.push(String(mi).padStart(2, '0') + 'м');
+        if (!d && !h) parts.push((se || '0') + 'с');
+        return parts.join(' ');
+    }
+
+    function setText(el, text) {
+        if (el) el.textContent = text;
+    }
+
+    function render() {
+        bar.classList.toggle('is-live', isLive);
+        setText(elLabel, isLive ? 'в эфире' : 'офлайн');
+
+        // оффлайн-сообщения DecAPI не показам
+        setText(elGame, isLive && live.game ? 'игра ' + live.game : 'игра —');
+        setText(elViewers, isLive && live.viewers ? 'зрители ' + live.viewers : 'зрители —');
+        setText(elUptime, isLive ? 'аптайм ' + (fmtDuration(live.uptime) || '—') : 'аптайм —');
+
+        if (statValue) setText(statValue, isLive ? (live.viewers || 'LIVE') : '—');
+        if (factState) setText(factState, isLive ? 'LIVE' : 'OFF');
+
+        if (badge) {
+            badge.classList.toggle('is-live', isLive);
+            const label = badge.querySelector('.live-badge-text');
+            if (label) label.textContent = isLive ? 'live on twitch' : 'twitch';
         }
-    } catch (e) {}
-    el.textContent = '—';
+
+        const streamReadout = document.getElementById('streamReadout');
+        if (streamReadout) {
+            streamReadout.textContent = isLive
+                ? (live.title || 'эфир идёт')
+                : 'не в эфире';
+        }
+
+        const panelTitle = document.getElementById('streamPanelTitle');
+        if (panelTitle) {
+            panelTitle.textContent = isLive ? 'Сейчас в эфире' : 'Эфир не идёт';
+        }
+
+        const f = followers !== null ? 'подписчики ' + fmtFollowers(followers) : 'подписчики —';
+        setText(elFollowers, f);
+        if (factFollowers) setText(factFollowers, followers !== null ? fmtFollowers(followers) : '—');
+        if (statFollowers) {
+            setText(statFollowers, followers !== null ? followers.toLocaleString('ru-RU') : '—');
+        }
+    }
+
+    function get(ep) {
+        return fetch(`${CONFIG.decapi}/${ep}/${CONFIG.twitchChannel}?_=${Date.now()}`)
+            .then(r => (r.ok ? r.text() : ''))
+            .then(t => t.trim())
+            .catch(() => '');
+    }
+
+    function num(v) {
+        const n = parseInt(v, 10);
+        return isNaN(n) || n < 0 ? null : String(n);
+    }
+
+    async function poll() {
+        const [viewers, game, uptime, follows, title] = await Promise.all([
+            get('viewercount'), get('game'), get('uptime'), get('followcount'), get('title')
+        ]);
+
+        isLive = num(viewers) !== null;
+
+        live = {
+            viewers: num(viewers),
+            game: isLive ? (game || null) : null,
+            uptime: isLive ? (uptime || null) : null,
+            title: isLive ? (title || null) : null
+        };
+        if (live.title) bar.title = live.title;
+
+        const f = num(follows);
+        if (f !== null) followers = parseInt(f, 10);
+
+        render();
+    }
+
+    poll();
+    setInterval(poll, 60000);
+    document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) poll();
+    });
 })();
 
 
@@ -311,6 +420,59 @@ const CONFIG = {
 
 
 /* ═══════════════════════════════════════════
+   VOD — vods.json (заполняется реальными видео)
+   Пустой список — секция прячется сама
+═══════════════════════════════════════════ */
+(function renderVods() {
+    const section = document.getElementById('video');
+    const divider = document.querySelector('.section-divider--video');
+    const navLink = document.getElementById('navVideo');
+    const grid = document.getElementById('vodsGrid');
+    if (!section || !grid) return;
+
+    function plural(n) {
+        const m10 = n % 10, m100 = n % 100;
+        if (m10 === 1 && m100 !== 11) return 'ролик';
+        if (m10 >= 2 && m10 <= 4 && (m100 < 10 || m100 >= 20)) return 'ролика';
+        return 'роликов';
+    }
+
+    fetch('vods.json?t=' + Date.now())
+        .then(r => r.ok ? r.json() : null)
+        .then(data => {
+            const videos = (data && data.videos) || [];
+            if (!videos.length) return;   // нет контента — не показываем пустоту
+
+            const readout = section.querySelector('.section-readout');
+            if (readout) {
+                const latest = videos[0].published;
+                readout.textContent = `${videos.length} ${plural(videos.length)} · последний ${latest}`;
+            }
+
+            grid.innerHTML = videos.map(v => `
+                <a class="vod" href="${v.url}" target="_blank" rel="noopener">
+                    <span class="vod-thumb">
+                        <img src="${v.thumb}" alt="${v.title}" loading="lazy" decoding="async" width="480" height="360">
+                        ${v.kind === 'short' ? '<span class="vod-kind">short</span>' : ''}
+                    </span>
+                    <span class="vod-body">
+                        <span class="vod-title">${v.title}</span>
+                        <span class="vod-meta">
+                            <span>${v.published}</span>
+                            ${v.views != null ? `<span>${v.views.toLocaleString('ru-RU')} просм.</span>` : ''}
+                        </span>
+                    </span>
+                </a>
+            `).join('');
+
+            section.hidden = false;
+            if (divider) divider.hidden = false;
+            if (navLink) navLink.hidden = false;
+        })
+        .catch(() => {});
+})();
+
+/* ═══════════════════════════════════════════
    CALENDAR
 ═══════════════════════════════════════════ */
 (function initMonthlyCalendar() {
@@ -358,8 +520,7 @@ const CONFIG = {
 
             let eventsHTML = '';
             events.forEach(e => {
-                const icon = e.type === 'stream' ? '🟧' : '🟩';
-                eventsHTML += `<div class="schedule-event ${e.type}"><span class="schedule-event-time">${icon} ${e.time}</span><span class="schedule-event-title">${e.title}</span></div>`;
+                eventsHTML += `<div class="schedule-event ${e.type}"><span class="schedule-event-time mono">${e.time}</span><span class="schedule-event-title">${e.title}</span></div>`;
             });
 
             cell.innerHTML = `<span class="cell-date-num">${day}</span>${eventsHTML}`;
@@ -410,9 +571,23 @@ const CONFIG = {
 ═══════════════════════════════════════════ */
 (function initHeaderScroll() {
     const header = document.getElementById('header');
+    if (!header) return;
+
+    let ticking = false;
+    function update() {
+        header.classList.toggle('scrolled', window.pageYOffset > 40);
+        // статус-бар прижат к шапке — держим смещение в CSS-переменной
+        document.documentElement.style.setProperty('--header-h', header.offsetHeight + 'px');
+        ticking = false;
+    }
+
     window.addEventListener('scroll', () => {
-        header.classList.toggle('scrolled', window.pageYOffset > 80);
-    });
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(update);
+    }, { passive: true });
+    window.addEventListener('resize', update);
+    update();
 })();
 
 
