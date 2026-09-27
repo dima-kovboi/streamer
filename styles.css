@@ -14,8 +14,8 @@
     --orange: #ff8c00;
     --orange-glow: rgba(255, 140, 0, 0.3);
     --text-primary: #ffffff;
-    --text-secondary: #a0a5b5;
-    --text-muted: #6b7084;
+    --text-secondary: #b4b9c7;
+    --text-muted: #8b90a3;
     --border-glass: rgba(0, 255, 102, 0.15);
     --border-glass-hover: rgba(0, 255, 102, 0.35);
     --border-subtle: rgba(255, 255, 255, 0.06);
@@ -98,7 +98,10 @@ button {
 ═══════════════════════════════════════════ */
 #bg-canvas {
     position: fixed;
-    inset: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 130vh;
     z-index: 0;
     pointer-events: none;
 }
@@ -111,6 +114,44 @@ button {
 /* Canvas fallback */
 .no-canvas .page-content {
     background: var(--bg-deep);
+}
+
+/* Без JS контент не должен оставаться невидимым */
+.no-js .reveal {
+    opacity: 1;
+    transform: none;
+}
+
+/* Фокус с клавиатуры */
+:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: var(--radius-sm);
+}
+
+a:focus-visible,
+button:focus-visible {
+    outline-offset: 4px;
+}
+
+.skip-link {
+    position: absolute;
+    top: -100px;
+    left: var(--space-md);
+    z-index: 200;
+    padding: 12px 20px;
+    background: var(--accent);
+    color: var(--bg-deep);
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    border-radius: var(--radius-md);
+    transition: top var(--duration-normal) var(--ease-out);
+}
+
+.skip-link:focus {
+    top: var(--space-md);
 }
 
 /* ═══════════════════════════════════════════
@@ -350,6 +391,33 @@ button {
 
 .hero-content {
     max-width: 800px;
+    position: relative;
+}
+
+/* мягкое свечение за hero-блоком */
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: min(1100px, 130vw);
+    aspect-ratio: 1;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(0, 255, 102, 0.13) 0%, rgba(0, 255, 102, 0.04) 35%, transparent 65%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* HUD-рамка по краям экрана */
+.hero::after {
+    content: '';
+    position: absolute;
+    inset: 96px var(--space-2xl) 64px;
+    border: 1px solid rgba(0, 255, 102, 0.08);
+    border-radius: var(--radius-xl);
+    pointer-events: none;
+    mask-image: linear-gradient(180deg, #000 0%, #000 70%, transparent 100%);
+    -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 70%, transparent 100%);
 }
 
 .hero-subtitle {
@@ -541,6 +609,46 @@ button {
     width: 100%;
     height: 100%;
     border: none;
+    background: #000;
+    z-index: 1;
+}
+
+.stream-placeholder {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-md);
+    transition: opacity var(--duration-normal) var(--ease-out);
+    background:
+        repeating-linear-gradient(0deg, rgba(0, 255, 102, 0.03) 0 1px, transparent 1px 4px),
+        radial-gradient(circle at 50% 45%, rgba(0, 255, 102, 0.08), transparent 60%),
+        #05060a;
+}
+
+.stream-placeholder-pulse {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 2px solid var(--border-glass);
+    border-top-color: var(--accent);
+    animation: spin 0.9s linear infinite;
+}
+
+.stream-placeholder-text {
+    font-family: var(--font-display);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
 }
 
 .stream-info-panel {
@@ -618,6 +726,7 @@ button {
     perspective: 1000px;
     border: 1px solid var(--border-glass);
     background: var(--bg-elevated);
+    will-change: transform;
 }
 
 .game-card:hover {
@@ -627,8 +736,10 @@ button {
 .game-card-bg {
     position: absolute;
     inset: 0;
-    background-size: cover;
-    background-position: center;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
     transition: transform 0.5s var(--ease-out);
 }
 
@@ -650,6 +761,9 @@ button {
     right: 0;
     padding: var(--space-lg);
     z-index: 2;
+    transform-style: preserve-3d;
+    transition: transform var(--duration-normal) var(--ease-out);
+    will-change: transform;
 }
 
 .game-card-genre {
@@ -875,6 +989,31 @@ button {
 
 .setup-item:hover {
     transform: translateY(-4px);
+}
+
+/* Ключевые компоненты — визуальный акцент, чтобы взгляд цеплялся */
+.setup-item--key {
+    background: linear-gradient(135deg, rgba(0, 255, 102, 0.09), rgba(14, 17, 23, 0.65) 55%);
+    border-color: var(--border-glass-hover);
+}
+
+.setup-item--key:hover {
+    border-color: var(--accent);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.35), 0 0 24px rgba(0, 255, 102, 0.12);
+}
+
+.setup-item--key .setup-icon {
+    background: rgba(0, 255, 102, 0.14);
+    border-color: rgba(0, 255, 102, 0.35);
+    box-shadow: inset 0 0 18px rgba(0, 255, 102, 0.12);
+}
+
+.setup-item--key .setup-info h4 {
+    color: var(--accent);
+}
+
+.setup-item--key .setup-info p {
+    font-size: 1.08rem;
 }
 
 .setup-icon {
@@ -1458,6 +1597,26 @@ button {
     animation: blink 1s step-end infinite;
 }
 
+.countdown-hint {
+    display: inline-block;
+    margin-top: var(--space-md);
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border-glass-hover);
+    padding-bottom: 2px;
+    transition: color var(--duration-fast) var(--ease-out),
+                border-color var(--duration-fast) var(--ease-out);
+}
+
+.countdown-hint:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
 @keyframes blink {
     50% { opacity: 0; }
 }
@@ -1470,10 +1629,20 @@ button {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
     }
 
     .reveal {
         opacity: 1;
         transform: none;
+    }
+
+    .hero::before,
+    .hero::after {
+        display: none;
+    }
+
+    #bg-canvas {
+        display: none;
     }
 }

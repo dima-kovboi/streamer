@@ -1,1 +1,31 @@
-{"name":"","short_name":"","icons":[{"src":"/android-chrome-192x192.png","sizes":"192x192","type":"image/png"},{"src":"/android-chrome-512x512.png","sizes":"512x512","type":"image/png"}],"theme_color":"#ffffff","background_color":"#ffffff","display":"standalone"}
+{
+  "name": "dimakovboi — официальный сайт стримера",
+  "short_name": "dimakovboi",
+  "description": "Стримы, контент и только живые эмоции. Minecraft, Brawl Stars, Euro Truck Simulator 2, CS2.",
+  "start_url": "../index.html",
+  "scope": "../",
+  "display": "standalone",
+  "theme_color": "#08090c",
+  "background_color": "#08090c",
+  "lang": "ru",
+  "icons": [
+    {
+      "src": "android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

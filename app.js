@@ -1,3 +1,5 @@
+document.documentElement.classList.remove('no-js');
+
 /* ═══════════════════════════════════════════
    РАСПИСАНИЕ — загружается из schedule.json
    Редактируется через admin.html
@@ -20,34 +22,8 @@ let SCHEDULE_EVENTS = [
 
 /* ═══════════════════════════════════════════
    ИГРЫ / ДИСЦИПЛИНЫ
-   Картинки из папки assets/ (800x1067 px)
+   Карточки в index.html, картинки assets/*.webp (800x1067)
 ═══════════════════════════════════════════ */
-const GAMES_DATA = [
-    {
-        name: "Minecraft",
-        genre: "Sandbox · Survival",
-        desc: "Строим, выживаем и устраиваем безумие в мире блоков!",
-        image: "assets/minecraft.png"
-    },
-    {
-        name: "Brawl Stars",
-        genre: "Mobile · Battle Royale",
-        desc: "Динамичные 3v3 бои и королевские битвы на мобилках!",
-        image: "assets/brawlstars.png"
-    },
-    {
-        name: "Euro Truck Sim 2",
-        genre: "Simulator · Driving",
-        desc: "Дальнобойные маршруты по Европе под чиллоу-музыку.",
-        image: "assets/ets2.png"
-    },
-    {
-        name: "Counter-Strike 2",
-        genre: "FPS · Competitive",
-        desc: "Тактический шутер и напряжённые матчи на высоком уровне.",
-        image: "assets/cs2.png"
-    }
-];
 
 
 
@@ -94,11 +70,24 @@ const CONFIG = {
         return;
     }
 
-    let w, h;
+    // w/h — вьюпорт в CSS-пикселях; backing store умножаем на dpr (чёткость на 2K)
+    let w, h, dpr;
 
     function resize() {
-        w = canvas.width = window.innerWidth;
-        h = canvas.height = window.innerHeight;
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        w = window.innerWidth;
+        h = window.innerHeight;
+        canvas.width = Math.round(w * dpr);
+        canvas.height = Math.round(h * dpr);
+        canvas.style.width = w + 'px';
+        canvas.style.height = h + 'px';
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        fireflies = [];
+        orbs = [];
+        particles = [];
+        for (let i = 0; i < 30; i++) fireflies.push(new Firefly());
+        for (let i = 0; i < 5; i++) orbs.push(new Orb());
+        for (let i = 0; i < 40; i++) particles.push(new Particle());
     }
 
     // === Светлячки (маленькие яркие точки) ===
@@ -252,8 +241,9 @@ const CONFIG = {
         ctx.stroke();
     }
 
+    let rafId = null;
+
     function animate() {
-        ctx.clearRect(0, 0, w, h);
         ctx.fillStyle = '#08090c';
         ctx.fillRect(0, 0, w, h);
 
@@ -263,23 +253,30 @@ const CONFIG = {
         fireflies.forEach(f => { f.update(); f.draw(ctx); });
         particles.forEach(p => { p.update(); p.draw(ctx); });
         drawLines(particles);
-        drawLines(particles);
 
-        requestAnimationFrame(animate);
+        rafId = requestAnimationFrame(animate);
+    }
+
+    // не жжём CPU/батарею, пока вкладка в фоне
+    function syncPlayback() {
+        if (document.hidden) {
+            if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+        } else if (!rafId) {
+            rafId = requestAnimationFrame(animate);
+        }
     }
 
     function init() {
         resize();
-        fireflies = [];
-        orbs = [];
-        particles = [];
-        for (let i = 0; i < 30; i++) fireflies.push(new Firefly());
-        for (let i = 0; i < 5; i++) orbs.push(new Orb());
-        for (let i = 0; i < 40; i++) particles.push(new Particle());
         animate();
     }
 
-    window.addEventListener('resize', resize);
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(resize, 150);
+    });
+    document.addEventListener('visibilitychange', syncPlayback);
     init();
 })();
 
@@ -287,22 +284,28 @@ const CONFIG = {
 /* ═══════════════════════════════════════════
    RENDER: GAME CARDS
 ═══════════════════════════════════════════ */
-(function renderGames() {
-    const grid = document.getElementById('gamesGrid');
-    GAMES_DATA.forEach(game => {
-        const card = document.createElement('div');
-        card.className = 'game-card';
-        card.innerHTML = `
-            <div class="game-card-bg" style="background-image: url('${game.image}')"></div>
-            <div class="game-card-overlay"></div>
-            <div class="game-card-content">
-                <div class="game-card-genre">${game.genre}</div>
-                <div class="game-card-name">${game.name}</div>
-                <div class="game-card-desc">${game.desc}</div>
-            </div>
-            <div class="game-card-glow"></div>
-        `;
-        grid.appendChild(card);
+(function initGameCardTilt() {
+    document.querySelectorAll('.game-card').forEach(card => {
+        if (window.matchMedia('(hover: none)').matches) return;
+        card.addEventListener('mousemove', e => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const cx = rect.width / 2;
+            const cy = rect.height / 2;
+            const rx = ((y - cy) / cy) * -8;
+            const ry = ((x - cx) / cx) * 8;
+            card.style.transform = `perspective(1000px) rotateX(${rx}deg) rotateY(${ry}deg) scale3d(1.03,1.03,1.03)`;
+            const content = card.querySelector('.game-card-content');
+            if (content) {
+                content.style.transform = `translateZ(28px) rotateX(${-rx}deg) rotateY(${-ry}deg)`;
+            }
+        });
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = '';
+            const content = card.querySelector('.game-card-content');
+            if (content) content.style.transform = '';
+        });
     });
 })();
 
@@ -380,40 +383,25 @@ const CONFIG = {
 
 
 /* ═══════════════════════════════════════════
-   3D TILT
-═══════════════════════════════════════════ */
-(function init3DTilt() {
-    document.querySelectorAll('.game-card').forEach(card => {
-        card.addEventListener('mousemove', e => {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            const cx = rect.width / 2;
-            const cy = rect.height / 2;
-            card.style.transform = `perspective(1000px) rotateX(${((y - cy) / cy) * -10}deg) rotateY(${((x - cx) / cx) * 10}deg) scale3d(1.03,1.03,1.03)`;
-        });
-        card.addEventListener('mouseleave', () => {
-            card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1,1,1)';
-        });
-    });
-})();
-
-
-/* ═══════════════════════════════════════════
    SCROLL REVEAL
 ═══════════════════════════════════════════ */
 (function initScrollReveal() {
-    let idx = 0;
+    const items = document.querySelectorAll('.reveal');
+    if (!('IntersectionObserver' in window)) {
+        items.forEach(el => el.classList.add('visible'));
+        return;
+    }
+
+    // задержка только внутри одной секции, а не по всему документу
     const obs = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                setTimeout(() => entry.target.classList.add('visible'), idx * 80);
-                idx++;
-                obs.unobserve(entry.target);
-            }
+        const hits = entries.filter(e => e.isIntersecting);
+        hits.forEach((entry, i) => {
+            const delay = Math.min(i * 80, 320);
+            setTimeout(() => entry.target.classList.add('visible'), delay);
+            obs.unobserve(entry.target);
         });
     }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+    items.forEach(el => obs.observe(el));
 })();
 
 
@@ -434,15 +422,26 @@ const CONFIG = {
 (function initMobileMenu() {
     const toggle = document.getElementById('mobileToggle');
     const nav = document.getElementById('mainNav');
-    toggle.addEventListener('click', () => {
-        nav.classList.toggle('open');
-        toggle.classList.toggle('active');
-    });
+    if (!toggle || !nav) return;
+
+    function setOpen(open) {
+        nav.classList.toggle('open', open);
+        toggle.classList.toggle('active', open);
+        toggle.setAttribute('aria-expanded', String(open));
+        toggle.setAttribute('aria-label', open ? 'Закрыть меню' : 'Открыть меню');
+    }
+
+    toggle.addEventListener('click', () => setOpen(!nav.classList.contains('open')));
+
     nav.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-            nav.classList.remove('open');
-            toggle.classList.remove('active');
-        });
+        link.addEventListener('click', () => setOpen(false));
+    });
+
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && nav.classList.contains('open')) {
+            setOpen(false);
+            toggle.focus();
+        }
     });
 })();
 
@@ -462,14 +461,41 @@ const CONFIG = {
 
 
 /* ═══════════════════════════════════════════
-   TWITCH EMBED — AUTO DOMAIN
+   TWITCH EMBED — AUTO DOMAIN + LAZY
 ═══════════════════════════════════════════ */
-(function fixTwitchEmbed() {
+(function lazyTwitchEmbed() {
     const iframe = document.querySelector('.stream-player iframe');
-    if (iframe) {
+    if (!iframe) return;
+
+    const placeholder = document.getElementById('streamPlaceholder');
+
+    function hidePlaceholder() {
+        if (!placeholder || placeholder.dataset.done) return;
+        placeholder.dataset.done = '1';
+        placeholder.style.opacity = '0';
+        setTimeout(() => placeholder.remove(), 400);
+    }
+
+    function mount() {
         const parent = window.location.hostname || 'localhost';
+        // держим заглушку, пока плеер реально не отдал кадр
+        iframe.addEventListener('load', hidePlaceholder, { once: true });
+        setTimeout(hidePlaceholder, 8000);
         iframe.src = `https://player.twitch.tv/?channel=${CONFIG.twitchChannel}&parent=${parent}&muted=true`;
     }
+
+    // не грузим плеер, пока до секции не доскроллили
+    if (!('IntersectionObserver' in window)) {
+        mount();
+        return;
+    }
+    const obs = new IntersectionObserver(entries => {
+        if (entries.some(e => e.isIntersecting)) {
+            mount();
+            obs.disconnect();
+        }
+    }, { rootMargin: '300px' });
+    obs.observe(iframe.parentElement);
 })();
 
 
@@ -479,10 +505,20 @@ const CONFIG = {
 (function initParallax() {
     const canvas = document.getElementById('bg-canvas');
     if (!canvas) return;
+
+    let ticking = false;
+    function update() {
+        const room = canvas.offsetHeight - window.innerHeight;
+        const offset = Math.min(window.pageYOffset * 0.15, Math.max(room, 0));
+        canvas.style.transform = `translateY(${offset}px)`;
+        ticking = false;
+    }
+
     window.addEventListener('scroll', () => {
-        const scroll = window.pageYOffset;
-        canvas.style.transform = `translateY(${scroll * 0.3}px)`;
-    });
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(update);
+    }, { passive: true });
 })();
 
 
@@ -510,7 +546,8 @@ const CONFIG = {
     function update() {
         const next = getNextStream();
         if (!next) {
-            el.innerHTML = '<div class="countdown-label">Ближайший стрим скоро!</div>';
+            el.innerHTML = '<div class="countdown-title">Ближайший стрим скоро!</div>'
+                + '<a href="#schedule" class="countdown-hint">Смотри расписание стримов</a>';
             return;
         }
 
