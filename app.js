@@ -391,7 +391,64 @@ const CONFIG = {
 
 
 /* ═══════════════════════════════════════════
-   RENDER: GAME CARDS
+   HERO — живой фон: параллакс + часы
+═══════════════════════════════════════════ */
+(function heroLife() {
+    const clock = document.getElementById('heroClock');
+    if (clock) {
+        const pad = n => String(n).padStart(2, '0');
+        const tick = () => {
+            const d = new Date();
+            clock.textContent = `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+        };
+        tick();
+        setInterval(tick, 1000);
+    }
+
+    const bg = document.querySelector('.hero-bg');
+    const layers = document.querySelectorAll('.hero-bg-layer');
+    if (!bg || !layers.length) return;
+    if (window.matchMedia('(hover: none)').matches) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    let ticking = false;
+    let tx = 0, ty = 0, cx = 0, cy = 0;
+
+    function loop() {
+        // мягкое «догоняющее» движение — без рывков
+        cx += (tx - cx) * 0.06;
+        cy += (ty - cy) * 0.06;
+        layers.forEach((layer, i) => {
+            const depth = (i + 1) * 6;
+            layer.style.setProperty('--mx', (cx * depth).toFixed(2) + 'px');
+            layer.style.setProperty('--my', (cy * depth).toFixed(2) + 'px');
+        });
+        if (Math.abs(cx) > 0.01 || Math.abs(cy) > 0.01) {
+            requestAnimationFrame(loop);
+        } else {
+            ticking = false;
+        }
+    }
+
+    function wake() {
+        if (!ticking) {
+            ticking = true;
+            requestAnimationFrame(loop);
+        }
+    }
+
+    document.addEventListener('mousemove', e => {
+        const nx = (e.clientX / window.innerWidth - 0.5) * 2;
+        const ny = (e.clientY / window.innerHeight - 0.5) * 2;
+        tx = -nx * 14;
+        ty = -ny * 10;
+        wake();
+    }, { passive: true });
+})();
+
+
+/* ═══════════════════════════════════════════
+   3D TILT
 ═══════════════════════════════════════════ */
 (function initGameCardTilt() {
     document.querySelectorAll('.game-card').forEach(card => {

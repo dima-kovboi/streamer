@@ -489,6 +489,105 @@ body::after {
 .hero-content {
     max-width: 800px;
     position: relative;
+    z-index: 2;
+}
+
+/* ── ЖИВОЙ ФОН: игровые постеры в разной глубине ── */
+.hero-bg {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+    -webkit-mask-image: radial-gradient(88% 70% at 50% 50%, transparent 34%, #000 96%);
+    mask-image: radial-gradient(88% 70% at 50% 50%, transparent 34%, #000 96%);
+}
+
+/* затемняющая вуаль поверх коллажа — собирает композицию в одно целое */
+.hero-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(70% 55% at 50% 50%, rgba(8, 9, 12, 0.82) 0%, rgba(8, 9, 12, 0.35) 60%, rgba(8, 9, 12, 0.1) 100%),
+        linear-gradient(180deg, rgba(8, 9, 12, 0.7) 0%, transparent 22%, transparent 74%, rgba(8, 9, 12, 0.85) 100%);
+}
+
+.hero-bg-layer {
+    position: absolute;
+    background-size: cover;
+    background-repeat: no-repeat;
+    filter: grayscale(0.62) contrast(1.05) brightness(0.45);
+    opacity: 0.5;
+    will-change: transform;
+    animation: drift linear infinite;
+    /* вертикальные края растворяем, чтобы не было видно стыков панелей */
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 22%, #000 78%, transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0%, #000 22%, #000 78%, transparent 100%);
+}
+
+.hero-bg-layer--1 {
+    left: 1%;
+    width: 25%;
+    top: -16%;
+    height: 132%;
+    background-image: url('assets/minecraft-400.webp');
+    background-position: 50% 42%;
+    animation-duration: 34s;
+}
+
+.hero-bg-layer--2 {
+    left: 26.5%;
+    width: 22%;
+    top: 7%;
+    height: 112%;
+    background-image: url('assets/brawlstars-400.webp');
+    background-position: 50% 30%;
+    animation-duration: 41s;
+    animation-direction: reverse;
+}
+
+.hero-bg-layer--3 {
+    left: 51%;
+    width: 26%;
+    top: -12%;
+    height: 126%;
+    background-image: url('assets/ets2-400.webp');
+    background-position: 50% 55%;
+    animation-duration: 47s;
+}
+
+.hero-bg-layer--4 {
+    left: 78%;
+    width: 21%;
+    top: 11%;
+    height: 106%;
+    background-image: url('assets/cs2-400.webp');
+    background-position: 50% 35%;
+    animation-duration: 38s;
+    animation-direction: reverse;
+}
+
+@keyframes drift {
+    0%   { transform: translate3d(var(--mx, 0px), calc(-3% + var(--my, 0px)), 0) scale(1.04); }
+    50%  { transform: translate3d(var(--mx, 0px), calc(3% + var(--my, 0px)), 0) scale(1.09); }
+    100% { transform: translate3d(var(--mx, 0px), calc(-3% + var(--my, 0px)), 0) scale(1.04); }
+}
+
+/* медленная полоса, как у осциллографа */
+.hero-bg-scan {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 34vh;
+    top: -34vh;
+    background: linear-gradient(180deg, transparent, rgba(0, 255, 102, 0.055) 55%, transparent);
+    animation: scan 11s linear infinite;
+}
+
+@keyframes scan {
+    0%   { transform: translateY(0); }
+    100% { transform: translateY(168vh); }
 }
 
 .hero::before {
